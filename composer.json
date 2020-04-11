@@ -1,0 +1,17 @@
+{
+  "name": "dimvic/hcaptcha",
+  "description": "hCaptcha integration helper",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "dimitris",
+      "email": "dimitris@unhooked.co"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "dimvic\\": "src/"
+    }
+  }
+}
