@@ -5,11 +5,17 @@ namespace dimvic;
 use Error;
 use RuntimeException;
 use function array_filter;
+use function date;
+use function file_get_contents;
 use function file_put_contents;
 use function getenv;
 use function http_build_query;
+use function is_dir;
 use function is_string;
+use function json_decode;
 use function mkdir;
+use function sprintf;
+use function stream_context_create;
 
 class HCaptcha
 {
@@ -31,13 +37,6 @@ class HCaptcha
         $siteKey = $siteKey ?? static::getSiteKey();
 
         return '<div class="h-captcha" data-sitekey="' . $siteKey . '"></div>';
-    }
-
-    public static function getHiddenInput(?string $siteKey = null): string
-    {
-        $siteKey = $siteKey ?? static::getSiteKey();
-
-        return '<input type="hidden" class="h-captcha" data-sitekey="' . $siteKey . '">';
     }
 
     public static function validate(?string $token = null, ?string $remoteIp = null, ?string $secret = null): bool
@@ -67,7 +66,7 @@ class HCaptcha
             $response = file_get_contents(static::URL_VERIFY, false, $context);
 
             if ($logPath = static::getLogPath()) {
-                if (!mkdir($logPath, 0755) && !is_dir($logPath)) {
+                if (!is_dir($logPath) && !mkdir($logPath, 0755) && !is_dir($logPath)) {
                     throw new RuntimeException(sprintf('Directory "%s" was not created', $logPath));
                 }
 
